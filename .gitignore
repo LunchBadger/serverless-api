@@ -6,5 +6,6 @@ example/keys/*.pem
 .DS_Store
 **/.DS_Store
 coverage
+workdir
 .nyc_output
 coverage.lcov
