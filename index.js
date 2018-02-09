@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const path = require('path');
-const {promisify} = require('util');
+const { promisify } = require('util');
 const readdir = promisify(fs.readdir);
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
@@ -21,13 +21,13 @@ app.post('/:id/service', async (req, res) => {
   const exectutor = new Executor();
   const servicePath = buildPath(req.params.id);
   try {
-    await exectutor.createFromTemplate({servicePath});
+    await exectutor.createFromTemplate({ servicePath });
+    const folderInfo = await collectFiles(servicePath);
+    res.json(folderInfo);
   } catch (err) {
     console.log(err.message);
-    res.status(400).json({message: err.message, info: 'recreate or update service'});
+    res.status(400).json({ message: err.message, info: 'recreate or update service' });
   }
-  const folderInfo = await collectFiles(servicePath);
-  res.json(folderInfo);
 });
 
 app.get('/:id/service', async (req, res, next) => {
@@ -42,8 +42,9 @@ app.get('/:id/service', async (req, res, next) => {
 app.put('/:id/service', async (req, res, next) => {
   const servicePath = buildPath(req.params.id);
   try {
-    updateFiles(servicePath, req.body);
-    res.json(collectFiles(servicePath));
+    await updateFiles(servicePath, req.body);
+    const freshState = await collectFiles(servicePath);
+    res.json(freshState);
   } catch (err) {
     next(err);
   }
@@ -53,26 +54,28 @@ app.post('/:id/deploy', async (req, res) => {
   const exectutor = new Executor();
   const servicePath = buildPath(req.params.id);
   try {
-    const r = await exectutor.deploy({servicePath});
+    const r = await exectutor.deploy({ servicePath });
     res.send('Hello World!' + r);
   } catch (err) {
     console.log(err.message);
-    res.status(400).json({message: err.message, info: 'deploy failed'});
+    res.status(400).json({ message: err.message, info: 'deploy failed' });
   }
 });
 app.listen(4444, () => console.log('Serverless API is running'));
 
-async function updateFiles (dirname, data) {
+function updateFiles (dirname, data) {
   const rootPath = path.join(__dirname, dirname);
-  yaml.dump(data.serverless, {filename: path.join(rootPath, 'serverless.yml')});
-  for (const filename in data.files) {
-    const filePath = path.join(__dirname, filename);
+  yaml.dump(data.serverless, { filename: path.join(rootPath, 'serverless.yml') });
+  const promises = data.files.map(filename => {
+    const filePath = path.join(rootPath, filename);
     if (!data.files[filename]) { // if key is present but falsy do delete the file
-      rmFile(filePath);
-      continue;
+      return rmFile(filePath);
     }
-    writeFile(filePath);
-  }
+    return writeFile(filePath, data.files[filename]);
+  });
+
+  return promises;
+  // TODO: git commit
 }
 
 async function collectFiles (dirname) {
