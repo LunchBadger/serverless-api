@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "express": "^4.16.2",
+    "js-yaml": "^3.10.0",
     "serverless": "^1.26.0",
     "serverless-kubeless": "^0.3.1"
   }

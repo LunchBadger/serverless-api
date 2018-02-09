@@ -23,5 +23,5 @@ plugins:
   - serverless-kubeless
 
 functions:
-  capitalize:
-    handler: handler.capitalize
+  capitalize1:
+    handler: handler.capitalize1

@@ -3,7 +3,7 @@
 const _ = require('lodash');
 
 module.exports = {
-  capitalize(req, res) {
+  capitalize1 (req, res) {
     let body = [];
     req.on('error', (err) => {
       console.error(err);
@@ -13,5 +13,5 @@ module.exports = {
       body = Buffer.concat(body).toString();
       res.end(_.capitalize(body));
     });
-  },
+  }
 };
