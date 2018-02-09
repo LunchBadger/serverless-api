@@ -7,6 +7,7 @@ const readdir = promisify(fs.readdir);
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 const rmFile = promisify(fs.unlink);
+const rimraf = promisify(require('rimraf'));
 const yaml = require('js-yaml');
 app.use(express.json());
 
@@ -39,6 +40,16 @@ app.get('/:id/service', async (req, res, next) => {
     next(err);
   }
 });
+
+app.delete('/:id/service', async (req, res, next) => {
+  const servicePath = buildPath(req.params.id);
+  try {
+    await rimraf(servicePath);
+    res.json({ok: true});
+  } catch (err) {
+    next(err);
+  }
+});
 app.put('/:id/service', async (req, res, next) => {
   const servicePath = buildPath(req.params.id);
   try {
@@ -57,7 +68,16 @@ app.post('/:id/deploy', async (req, res) => {
     const r = await exectutor.deploy({ servicePath });
     res.send('Hello World!' + r);
   } catch (err) {
-    console.log(err.message);
+    res.status(400).json({ message: err.message, info: 'deploy failed' });
+  }
+});
+app.delete('/:id/deploy', async (req, res) => {
+  const exectutor = new Executor();
+  const servicePath = buildPath(req.params.id);
+  try {
+    const r = await exectutor.removeDeployment({ servicePath });
+    res.send('Hello World!' + r);
+  } catch (err) {
     res.status(400).json({ message: err.message, info: 'deploy failed' });
   }
 });
