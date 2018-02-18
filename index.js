@@ -10,7 +10,7 @@ const rmFile = promisify(fs.unlink);
 const rimraf = promisify(require('rimraf'));
 const yaml = require('js-yaml');
 app.use(express.json());
-
+const startTime = new Date();
 const Executor = require('./lib/serverless-executor');
 const rootDir = buildPath();
 try { // TODO: refactor
@@ -81,7 +81,10 @@ app.delete('/:id/deploy', async (req, res) => {
     res.status(400).json({ message: err.message, info: 'deploy failed' });
   }
 });
-app.listen(4444, () => console.log('Serverless API is running'));
+
+app.get('/ping', (req, res) => res.json({uptime: (new Date() - startTime) / 1000}));
+
+app.listen(4444, () => console.log('Serverless API is running port 4444'));
 
 function updateFiles (dirname, data) {
   const rootPath = path.join(__dirname, dirname);
