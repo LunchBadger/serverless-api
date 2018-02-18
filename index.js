@@ -18,6 +18,19 @@ try { // TODO: refactor
 } catch (err) {
   console.log('path exists', rootDir);
 }
+if (!fs.existsSync('~/.kube/config')) {
+  // then we are running in container as root
+  fs.mkdirSync('/root/.kube');
+  const tmpl = yaml.safeLoad(fs.readFileSync(path.join(__dirname, 'kube-config.template.json')));
+
+  // This is localtion of credentials for service account running pod (default if not set)
+  const ca = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/ca.crt');
+  const token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token');
+
+  tmpl.clusters[0].cluster['certificate-authority-data'] = ca;
+  tmpl.users[0].user.token = token;
+  fs.writeFileSync('/root/.kube/config', yaml.dump(tmpl));
+}
 app.post('/:id/service', async (req, res) => {
   const exectutor = new Executor();
   const servicePath = buildPath(req.params.id);
@@ -26,7 +39,7 @@ app.post('/:id/service', async (req, res) => {
     const folderInfo = await collectFiles(servicePath);
     res.json(folderInfo);
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
     res.status(400).json({ message: err.message, info: 'recreate or update service' });
   }
 });
@@ -64,11 +77,13 @@ app.put('/:id/service', async (req, res, next) => {
 app.post('/:id/deploy', async (req, res) => {
   const exectutor = new Executor();
   const servicePath = buildPath(req.params.id);
+
   try {
     const r = await exectutor.deploy({ servicePath });
     res.send('Hello World!' + r);
   } catch (err) {
-    res.status(400).json({ message: err.message, info: 'deploy failed' });
+    console.log(err);
+    res.status(400).json({ message: err.message, info: 'deploy failed', err });
   }
 });
 app.delete('/:id/deploy', async (req, res) => {
