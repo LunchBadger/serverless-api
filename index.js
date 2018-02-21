@@ -10,7 +10,7 @@ const writeFile = promisify(fs.writeFile);
 const rmFile = promisify(fs.unlink);
 const rimraf = promisify(require('rimraf'));
 const yaml = require('js-yaml');
-app.use('/producers', cors({
+app.use('/', cors({
   origin: true,
   methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'],
   allowedHeaders: ['Cache-Control', 'Content-Type', 'Accept', 'Authorization', 'Accept-Encoding', 'Access-Control-Request-Headers', 'User-Agent', 'Access-Control-Request-Method', 'Pragma', 'Connection', 'Host'],
@@ -26,7 +26,8 @@ try { // TODO: refactor
 } catch (err) {
   console.log('path exists', rootDir);
 }
-if (!fs.existsSync('~/.kube/config')) {
+
+if (!fs.existsSync(path.join(process.env.HOME, '/.kube/config'))) {
   // then we are running in container as root
   fs.mkdirSync('/root/.kube');
   const tmpl = yaml.safeLoad(fs.readFileSync(path.join(__dirname, 'kube-config.template.json')));
@@ -51,6 +52,14 @@ app.post('/:id/service', async (req, res) => {
     res.status(400).json({ message: err.message, info: 'recreate or update service' });
   }
 });
+app.get('/service', async (req, res, next) => {
+  try {
+    const folders = getFolders(path.join(__dirname, 'workspace'));
+    res.json(folders);
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.get('/:id/service', async (req, res, next) => {
   const servicePath = buildPath(req.params.id);
@@ -64,6 +73,10 @@ app.get('/:id/service', async (req, res, next) => {
 
 app.delete('/:id/service', async (req, res, next) => {
   const servicePath = buildPath(req.params.id);
+  if (!fs.existsSync(servicePath)) {
+    res.status(404).end();
+  }
+
   try {
     await rimraf(servicePath);
     res.json({ok: true});
@@ -149,6 +162,9 @@ async function collectFiles (dirname) {
   }
   return folderInfo;
 }
+const getFolders = function (p) {
+  return fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory());
+};
 
 function buildPath (parts = []) {
   if (!Array.isArray(parts)) {
