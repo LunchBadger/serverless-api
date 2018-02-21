@@ -91,7 +91,7 @@ app.delete('/:id/deploy', async (req, res) => {
   const servicePath = buildPath(req.params.id);
   try {
     const r = await exectutor.removeDeployment({ servicePath });
-    res.send('Hello World!' + r);
+    res.json({ok: true, result: r});
   } catch (err) {
     res.status(400).json({ message: err.message, info: 'deploy failed' });
   }
