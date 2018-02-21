@@ -3,13 +3,21 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
+const cors = require('cors');
 const readdir = promisify(fs.readdir);
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 const rmFile = promisify(fs.unlink);
 const rimraf = promisify(require('rimraf'));
 const yaml = require('js-yaml');
+app.use('/producers', cors({
+  origin: true,
+  methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Cache-Control', 'Content-Type', 'Accept', 'Authorization', 'Accept-Encoding', 'Access-Control-Request-Headers', 'User-Agent', 'Access-Control-Request-Method', 'Pragma', 'Connection', 'Host'],
+  credentials: true
+}));
 app.use(express.json());
+
 const startTime = new Date();
 const Executor = require('./lib/serverless-executor');
 const rootDir = buildPath();
