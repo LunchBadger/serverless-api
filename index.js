@@ -40,7 +40,7 @@ app.get('/service', async (req, res, next) => {
   }
 });
 
-app.get('/:name/service', async (req, res, next) => {
+app.get('/service/:name', async (req, res, next) => {
   try {
     const folderInfo = await executor.collectFiles(req.params.name);
     res.json(folderInfo);
@@ -49,7 +49,7 @@ app.get('/:name/service', async (req, res, next) => {
   }
 });
 
-app.delete('/:name/service', async (req, res, next) => {
+app.delete('/service/:name', async (req, res, next) => {
   try {
     const rx = await executor.removeService({name: req.params.name});
     res.json(rx);
@@ -57,7 +57,7 @@ app.delete('/:name/service', async (req, res, next) => {
     next(err);
   }
 });
-app.put('/:name/service', async (req, res, next) => {
+app.put('/service/:name', async (req, res, next) => {
   try {
     await executor.updateFiles(req.params.name, req.body);
     const freshState = await executor.collectFiles(req.params.name);
@@ -67,7 +67,7 @@ app.put('/:name/service', async (req, res, next) => {
   }
 });
 
-app.post('/:name/deploy', async (req, res) => {
+app.post('/deploy/:name', async (req, res) => {
   const name = req.params.name;
   try {
     const r = await executor.deploy({ name });
@@ -76,7 +76,7 @@ app.post('/:name/deploy', async (req, res) => {
     res.status(400).json({ message: err.message, info: 'deploy failed', err });
   }
 });
-app.delete('/:name/deploy', async (req, res) => {
+app.delete('/deploy/:name', async (req, res) => {
   const name = req.params.name;
   try {
     const r = await executor.removeDeployment({ name });
