@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-
+const debug = require('debug')('sls:main');
 const kube = require('./lib/kube');
 kube.ensureConfig(); // Loading ~/.kube/config based on k8s run secret for serviceAccount
 
@@ -27,7 +27,8 @@ app.post('/service', async (req, res) => {
     const folderInfo = await executor.collectFiles(name);
     res.json(folderInfo);
   } catch (err) {
-    res.status(400).json({ message: err.message, info: 'recreate or update service' });
+    debug(err);
+    res.status(400).json({ message: 'FAILED_RECREATE_OR_UPDATE_SERVICE' });
   }
 });
 
@@ -84,3 +85,8 @@ app.delete('/:name/deploy', async (req, res) => {
 app.get('/ping', (req, res) => res.json({uptime: (new Date() - startTime) / 1000}));
 
 app.listen(4444, () => console.log('Serverless API is running port 4444'));
+
+process.on('unhandledRejection', error => {
+  // Won't execute
+  console.log('unhandledRejection', error);
+});
