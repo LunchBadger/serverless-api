@@ -50,7 +50,7 @@ app.get('/:name/service', async (req, res, next) => {
 });
 
 app.delete('/:name/service', async (req, res, next) => {
-
+  executor.removeService({name: req.params.name});
 });
 app.put('/:name/service', async (req, res, next) => {
   try {
