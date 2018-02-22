@@ -50,7 +50,12 @@ app.get('/:name/service', async (req, res, next) => {
 });
 
 app.delete('/:name/service', async (req, res, next) => {
-  executor.removeService({name: req.params.name});
+  try {
+    const rx = await executor.removeService({name: req.params.name});
+    res.json(rx);
+  } catch (err) {
+    next(err);
+  }
 });
 app.put('/:name/service', async (req, res, next) => {
   try {
