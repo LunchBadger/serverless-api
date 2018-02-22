@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node .",
+    "start": "NO_UPDATE_NOTIFIER=true node .",
     "lint": "eslint --fix .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
