@@ -21,9 +21,8 @@ const executor = new (require('./lib/serverless-executor'))();
 
 app.post('/service', async (req, res) => {
   const name = req.body.name;
-  executor.createFromTemplate({name, template: req.body.template});
   try {
-    await executor.createFromTemplate({ name });
+    await executor.createFromTemplate({name, template: req.body.template});
     const folderInfo = await executor.collectFiles(name);
     res.json(folderInfo);
   } catch (err) {
