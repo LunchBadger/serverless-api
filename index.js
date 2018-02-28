@@ -71,7 +71,7 @@ app.post('/deploy', async (req, res) => {
   const name = req.body.name;
   try {
     const r = await executor.deploy({ name });
-    res.send('Hello World!' + r);
+    res.send(r);
   } catch (err) {
     res.status(400).json({ message: err.message, info: 'deploy failed', err });
   }
