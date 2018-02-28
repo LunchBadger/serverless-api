@@ -2,3 +2,4 @@ node_modules/
 .git/
 workspace/
 .vscode/
+*.yaml

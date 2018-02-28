@@ -8,6 +8,5 @@ example/keys/*.pem
 coverage
 workspace
 .git
-*.yaml
 .nyc_output
 coverage.lcov
