@@ -67,8 +67,8 @@ app.put('/service/:name', async (req, res, next) => {
   }
 });
 
-app.post('/deploy/:name', async (req, res) => {
-  const name = req.params.name;
+app.post('/deploy', async (req, res) => {
+  const name = req.body.name;
   try {
     const r = await executor.deploy({ name });
     res.send('Hello World!' + r);
