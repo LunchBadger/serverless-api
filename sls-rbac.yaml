@@ -6,10 +6,18 @@ metadata:
 rules:
   -
     apiGroups: 
-      - "kubeless.io"
+      - "k8s.io"
     resources: 
       - "functions"
     verbs: ["create", "get", "delete", "list", "update", "patch"]
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
   -
     apiGroups: 
       - "autoscaling"
