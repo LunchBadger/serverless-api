@@ -7,5 +7,7 @@ example/keys/*.pem
 **/.DS_Store
 coverage
 workspace
+.git
+*.yaml
 .nyc_output
 coverage.lcov

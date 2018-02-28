@@ -27,7 +27,7 @@ app.post('/service', async (req, res) => {
     res.json(folderInfo);
   } catch (err) {
     debug(err);
-    res.status(400).json({ message: 'FAILED_RECREATE_OR_UPDATE_SERVICE' });
+    res.status(400).json({ message: 'FAILED_RECREATE_OR_UPDATE_SERVICE', info: err.message });
   }
 });
 
