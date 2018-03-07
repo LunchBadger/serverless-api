@@ -25,7 +25,8 @@ app.post('/service', async (req, res) => {
     await executor.createFromTemplate({
       name,
       template: req.body.template || req.body.env,
-      version: req.body.version
+      version: req.body.version,
+      meta: req.body.lunchbadger
     });
     const folderInfo = await executor.collectFiles(name);
     res.json(folderInfo);
