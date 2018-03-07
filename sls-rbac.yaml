@@ -24,6 +24,18 @@ rules:
     resources: 
       - "horizontalpodautoscalers"
     verbs: ["create", "get", "delete", "list", "update", "patch"]
+  - apiGroups:
+    - extensions
+    resources:
+    - ingresses
+    verbs:
+    - get
+    - list
+    - watch
+    - create
+    - update
+    - patch
+    - delete
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
