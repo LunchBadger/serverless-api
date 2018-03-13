@@ -45,6 +45,16 @@ app.get('/service', async (req, res, next) => {
   }
 });
 
+// remove all services
+app.delete('/service', async (req, res, next) => {
+  try {
+    const result = await executor.deleteServices();
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.get('/service/:name', async (req, res, next) => {
   try {
     const folderInfo = await executor.collectFiles(req.params.name);
