@@ -78,6 +78,7 @@ app.put('/service/:name', async (req, res, next) => {
     const freshState = await executor.collectFiles(req.params.name);
     res.json(freshState);
   } catch (err) {
+    console.log(err);
     next(err);
   }
 });
