@@ -1,0 +1,57 @@
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: sls-api-role
+rules:
+  -
+    apiGroups: 
+      - "k8s.io"
+    resources: 
+      - "functions"
+    verbs: ["create", "get", "delete", "list", "update", "patch"]
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+  -
+    apiGroups: 
+      - "autoscaling"
+    resources: 
+      - "horizontalpodautoscalers"
+    verbs: ["create", "get", "delete", "list", "update", "patch"]
+  - apiGroups:
+    - extensions
+    resources:
+    - ingresses
+    verbs:
+    - get
+    - list
+    - watch
+    - create
+    - update
+    - patch
+    - delete
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: sls-api-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: sls-api-role
+subjects:
+- kind: ServiceAccount
+  name: sls-api
+  namespace: customer
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sls-api
+  namespace: customer
