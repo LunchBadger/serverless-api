@@ -5,9 +5,6 @@ const debug = require('debug')('sls:main');
 const kube = require('./lib/kube');
 kube.ensureConfig(); // Loading ~/.kube/config based on k8s run secret for serviceAccount
 
-const git = require('./lib/git');
-git.clone();
-
 app.use('/', cors({
   origin: true,
   methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'],
