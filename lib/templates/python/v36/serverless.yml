@@ -1,0 +1,12 @@
+service: fn
+
+provider:
+  name: kubeless
+  runtime: python36
+
+plugins:
+  - serverless-kubeless
+
+functions:
+  fn:
+    handler: handler.fn
