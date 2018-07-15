@@ -62,7 +62,7 @@ app.get('/service/:name', async (req, res, next) => {
 });
 app.get('/service/:name/logs', async (req, res, next) => {
   try {
-    const folderInfo = await executor.logs(req.params.name);
+    const folderInfo = await executor.logs({name: req.params.name});
     res.json({logs: folderInfo});
   } catch (err) {
     next(err);
