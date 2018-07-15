@@ -2,7 +2,7 @@ service: fn
 
 provider:
   name: kubeless
-  runtime: python36
+  runtime: python:3.6
 
 plugins:
   - serverless-kubeless

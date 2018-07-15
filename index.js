@@ -60,6 +60,14 @@ app.get('/service/:name', async (req, res, next) => {
     next(err);
   }
 });
+app.get('/service/:name/logs', async (req, res, next) => {
+  try {
+    const folderInfo = await executor.logs(req.params.name);
+    res.json({logs: folderInfo});
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.delete('/service/:name', async (req, res, next) => {
   try {
@@ -75,7 +83,7 @@ app.put('/service/:name', async (req, res, next) => {
     const freshState = await executor.collectFiles(req.params.name);
     res.json(freshState);
   } catch (err) {
-    console.log(err);
+    debug(err);
     next(err);
   }
 });

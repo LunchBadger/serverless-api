@@ -2,7 +2,7 @@ service: fn
 
 provider:
   name: kubeless
-  runtime: python27
+  runtime: python:2.7
 
 plugins:
   - serverless-kubeless

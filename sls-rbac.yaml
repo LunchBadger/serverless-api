@@ -15,6 +15,7 @@ rules:
       - pods
       - services
       - configmaps
+      - pods/log
     verbs:
       - get
       - list
