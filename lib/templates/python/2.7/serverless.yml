@@ -1,0 +1,12 @@
+service: FN_NAME
+
+provider:
+  name: kubeless
+  runtime: python:2.7
+
+plugins:
+  - serverless-kubeless
+
+functions:
+  fn:
+    handler: handler.fn
