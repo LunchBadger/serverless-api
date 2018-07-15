@@ -2,7 +2,8 @@ service: fn
 
 provider:
   name: kubeless
-  runtime: node6
+  runtime: nodejs:8
+
 
 plugins:
   - serverless-kubeless

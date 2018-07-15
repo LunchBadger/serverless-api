@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Lunchbadger Serverless function",
   "dependencies": {
-    "serverless-kubeless": "^0.3.1"
   },
   "devDependencies": {},
   "scripts": {
