@@ -1,0 +1,12 @@
+service: FN_NAME
+
+provider:
+  name: kubeless
+  runtime: java:1.8
+
+plugins:
+  - serverless-kubeless
+
+functions:
+  fn:
+    handler: handler.fn
