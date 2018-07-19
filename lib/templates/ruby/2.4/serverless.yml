@@ -1,0 +1,12 @@
+service: FN_NAME
+
+provider:
+  name: kubeless
+  runtime: ruby:2.4
+
+plugins:
+  - serverless-kubeless
+
+functions:
+  fn:
+    handler: handler.fn
