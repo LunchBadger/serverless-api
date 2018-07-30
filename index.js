@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const debug = require('debug')('sls:main');
+require('./lib/git-listener')();
 const kube = require('./lib/kube');
 kube.ensureConfig(); // Loading ~/.kube/config based on k8s run secret for serviceAccount
 
