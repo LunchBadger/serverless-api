@@ -9,4 +9,4 @@ plugins:
 
 functions:
   fn:
-    handler: handler.FN_CAMEL_NAME
+    handler: handler.Handler
