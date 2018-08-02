@@ -1,0 +1,12 @@
+service: FN_NAME
+
+provider:
+  name: kubeless
+  runtime: go:1.10
+
+plugins:
+  - serverless-kubeless
+
+functions:
+  fn:
+    handler: handler.Handler

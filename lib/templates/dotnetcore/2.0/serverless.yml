@@ -1,0 +1,13 @@
+service: FN_NAME
+
+provider:
+  name: kubeless
+  runtime: dotnetcore:2.0
+
+
+plugins:
+  - serverless-kubeless
+
+functions:
+  fn:
+    handler: handler.fn

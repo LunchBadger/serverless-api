@@ -4,9 +4,8 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: sls-api-role
 rules:
-  -
-    apiGroups: 
-      - "k8s.io"
+  - apiGroups: 
+      - "kubeless.io"
     resources: 
       - "functions"
     verbs: ["create", "get", "delete", "list", "update", "patch"]
@@ -14,6 +13,9 @@ rules:
       - ""
     resources:
       - pods
+      - services
+      - configmaps
+      - pods/log
     verbs:
       - get
       - list
