@@ -5,7 +5,6 @@ const debug = require('debug')('sls:main');
 require('./lib/git-listener')();
 const kube = require('./lib/kube');
 kube.ensureConfig(); // Loading ~/.kube/config based on k8s run secret for serviceAccount
-
 app.use('/', cors({
   origin: true,
   methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'],
@@ -110,7 +109,7 @@ app.delete('/deploy/:name', async (req, res) => {
 
 app.get('/ping', (req, res) => res.json({uptime: (new Date() - startTime) / 1000}));
 
-app.listen(4444, () => console.log('Serverless API is running port 4444'));
+app.listen(4444, () => debug('Serverless API is running port 4444'));
 
 process.on('unhandledRejection', error => {
   // Won't execute
