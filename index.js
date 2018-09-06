@@ -92,18 +92,35 @@ app.post('/deploy', async (req, res) => {
   const name = req.body.name;
   try {
     const r = await executor.deploy({ name });
-    res.send(r);
+    res.json({
+      processed: true,
+      deployed: true,
+      result: r
+    });
   } catch (err) {
-    res.status(400).json({ message: err.message, info: 'deploy failed', err });
+    debug(err);
+    // Now we are hiding error instead of
+    // res.status(400).json({ message: err.message, info: 'deploy failed', err });
+    res.json({
+      processed: true,
+      deployed: false,
+      error: err
+    });
   }
 });
 app.delete('/deploy/:name', async (req, res) => {
   const name = req.params.name;
   try {
     const r = await executor.removeDeployment({ name });
-    res.json({ok: true, result: r});
+    res.json({deployed: true, result: r});
   } catch (err) {
-    res.status(400).json({ message: err.message, info: `deploy ${name} failed` });
+    // Now we are hiding error instead of
+    // res.status(400).json({ message: err.message, info: `deploy ${name} failed` });
+    res.json({
+      processed: true,
+      deployed: false,
+      error: err
+    });
   }
 });
 
