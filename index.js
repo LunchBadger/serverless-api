@@ -116,6 +116,7 @@ app.delete('/deploy/:name', async (req, res) => {
   } catch (err) {
     // Now we are hiding error instead of
     // res.status(400).json({ message: err.message, info: `deploy ${name} failed` });
+    debug(err);
     res.json({
       processed: true,
       deployed: false,
