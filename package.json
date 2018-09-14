@@ -18,7 +18,7 @@
     "eslint-plugin-node": "4.2.2",
     "eslint-plugin-promise": "3.5.0",
     "eslint-plugin-standard": "3.0.1",
-    "mocha": "^2.5.3"
+    "mocha": "^5.2.0"
   },
   "dependencies": {
     "@kubernetes/client-node": "^0.3.0",
@@ -27,7 +27,9 @@
     "directory-as-object": "^1.0.2",
     "eventsource": "^1.0.5",
     "express": "^4.16.2",
+    "express-validation": "^1.0.2",
     "fs-extra": "^6.0.0",
+    "joi": "^13.6.0",
     "js-yaml": "^3.10.0",
     "serverless": "^1.29.2",
     "serverless-kubeless": "^0.4.4",
