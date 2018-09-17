@@ -2,6 +2,13 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const debug = require('debug')('sls:main');
+const Joi = require('joi');
+const validate = require('express-validation');
+const Executor = require('./lib/serverless-executor');
+validate.options({
+  status: 422,
+  statusText: 'Unprocessable Entity'
+});
 require('./lib/git-listener')();
 const kube = require('./lib/kube');
 kube.ensureConfig(); // Loading ~/.kube/config based on k8s run secret for serviceAccount
@@ -14,14 +21,39 @@ app.use('/', cors({
 app.use(express.json());
 
 const startTime = new Date();
-const executor = new (require('./lib/serverless-executor'))();
+const executor = new Executor();
+const validation = {
+  createService: {
+    body: {
+      env: Joi.string().required(),
+      version: Joi.string().required(),
+      name: Joi.string().required()
+    }
+  },
+  getService: {
+    body: {
+      name: Joi.string().required()
+    }
+  },
+  deployService: {
+    body: {
+      name: Joi.string().required()
+    }
+  },
+  updateServiceFiles: {
+    body: {
+      serverless: Joi.object().required(),
+      files: Joi.object().required()
+    }
+  }
+};
 
-app.post('/service', async (req, res) => {
+app.post('/service', validate(validation.createService), async (req, res, next) => {
   const name = req.body.name;
   try {
     await executor.createFromTemplate({
       name,
-      template: req.body.template || req.body.env,
+      template: req.body.env,
       version: req.body.version,
       meta: req.body.lunchbadger
     });
@@ -29,7 +61,7 @@ app.post('/service', async (req, res) => {
     res.json(folderInfo);
   } catch (err) {
     debug(err);
-    res.status(400).json({ message: 'FAILED_RECREATE_OR_UPDATE_SERVICE', info: err.message });
+    return next(err);
   }
 });
 
@@ -62,8 +94,12 @@ app.get('/service/:name', async (req, res, next) => {
 });
 app.get('/service/:name/logs', async (req, res, next) => {
   try {
-    const folderInfo = await executor.logs({name: req.params.name});
-    res.json({logs: folderInfo});
+    const folderInfo = await executor.logs({
+      name: req.params.name
+    });
+    res.json({
+      logs: folderInfo
+    });
   } catch (err) {
     next(err);
   }
@@ -71,27 +107,30 @@ app.get('/service/:name/logs', async (req, res, next) => {
 
 app.delete('/service/:name', async (req, res, next) => {
   try {
-    const rx = await executor.removeService({name: req.params.name});
+    const rx = await executor.removeService({
+      name: req.params.name
+    });
     res.json(rx);
   } catch (err) {
     next(err);
   }
 });
-app.put('/service/:name', async (req, res, next) => {
+app.put('/service/:name', validate(validation.updateServiceFiles), async (req, res, next) => {
   try {
     await executor.updateFiles(req.params.name, req.body);
     const freshState = await executor.collectFiles(req.params.name);
     res.json(freshState);
   } catch (err) {
-    debug(err);
     next(err);
   }
 });
 
-app.post('/deploy', async (req, res) => {
+app.post('/deploy', validate(validation.deployService), async (req, res) => {
   const name = req.body.name;
   try {
-    const r = await executor.deploy({ name });
+    const r = await executor.deploy({
+      name
+    });
     res.json({
       processed: true,
       deployed: true,
@@ -111,8 +150,14 @@ app.post('/deploy', async (req, res) => {
 app.delete('/deploy/:name', async (req, res) => {
   const name = req.params.name;
   try {
-    const r = await executor.removeDeployment({ name });
-    res.json({processed: true, deployed: true, result: r});
+    const r = await executor.removeDeployment({
+      name
+    });
+    res.json({
+      processed: true,
+      deployed: true,
+      result: r
+    });
   } catch (err) {
     // Now we are hiding error instead of
     // res.status(400).json({ message: err.message, info: `deploy ${name} failed` });
@@ -125,11 +170,17 @@ app.delete('/deploy/:name', async (req, res) => {
   }
 });
 
-app.get('/ping', (req, res) => res.json({uptime: (new Date() - startTime) / 1000}));
+app.get('/ping', (req, res) => res.json({
+  uptime: (new Date() - startTime) / 1000
+}));
+app.use((err, req, res, next) => {
+  debug(err);
+  res.status(err.status || 400).json(err);
+});
 
 app.listen(4444, () => debug('Serverless API is running port 4444'));
 
 process.on('unhandledRejection', error => {
   // Won't execute
-  console.log('unhandledRejection', error);
+  debug('unhandledRejection', error);
 });
