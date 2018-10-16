@@ -5,5 +5,5 @@ import (
 )
 
 func Handler(event functions.Event, context functions.Context) (string, error) {
-	return "LunchBadger Go 1.10 function", nil
+	return "Express Serverless Platform Go 1.10 function", nil
 }
