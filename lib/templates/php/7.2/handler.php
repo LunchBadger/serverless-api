@@ -1,4 +1,4 @@
 <?php
 function FN_NAME($event, $context) {
-  return "LunchBadger PHP function";
+  return "Express Serverless Platform PHP function";
 }

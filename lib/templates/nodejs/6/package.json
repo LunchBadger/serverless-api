@@ -1,7 +1,7 @@
 {
   "name": "kubeless-nodejs",
   "version": "1.0.0",
-  "description": "Lunchbadger Serverless function",
+  "description": "Express Serverless Platform Serverless function",
   "dependencies": {
   },
   "devDependencies": {},
