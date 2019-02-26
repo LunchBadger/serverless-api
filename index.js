@@ -77,7 +77,7 @@ app.get('/service', async (req, res, next) => {
 // remove all services
 app.delete('/service', async (req, res, next) => {
   try {
-    const result = await executor.deleteServices();
+    const result = await executor.deleteServices({author: req.headers.author});
     res.json(result);
   } catch (err) {
     next(err);
@@ -108,7 +108,8 @@ app.get('/service/:name/logs', async (req, res, next) => {
 app.delete('/service/:name', async (req, res, next) => {
   try {
     const rx = await executor.removeService({
-      name: req.params.name
+      name: req.params.name,
+      author: req.headers.author
     });
     res.json(rx);
   } catch (err) {
@@ -117,7 +118,10 @@ app.delete('/service/:name', async (req, res, next) => {
 });
 app.put('/service/:name', validate(validation.updateServiceFiles), async (req, res, next) => {
   try {
-    await executor.updateFiles(req.params.name, req.body);
+    await executor.updateFiles({
+      name: req.params.name,
+      data: req.body,
+      author: req.headers.author});
     const freshState = await executor.collectFiles(req.params.name);
     res.json(freshState);
   } catch (err) {
