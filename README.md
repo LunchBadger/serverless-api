@@ -1,5 +1,4 @@
 # serverless-api
-API wrapper over serverless CLI with tubeless plugin
+API wrapper over serverless CLI with kubeless plugin
 
-
-kubectl apply -f https://github.com/kubeless/kubeless/releases/download/v1.0.0-alpha.6/kubeless-v1.0.0-alpha.6.yaml
+almost 1-1 mapping to serverless CLI
