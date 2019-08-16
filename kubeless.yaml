@@ -125,7 +125,7 @@ subjects:
   namespace: kubeless
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
-description: Kubernetes Native Serverless Framework
+#description: Kubernetes Native Serverless Framework
 kind: CustomResourceDefinition
 metadata:
   name: functions.kubeless.io
@@ -139,7 +139,7 @@ spec:
   version: v1beta1
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
-description: CRD object for HTTP trigger type
+#description: CRD object for HTTP trigger type
 kind: CustomResourceDefinition
 metadata:
   name: httptriggers.kubeless.io
@@ -153,7 +153,7 @@ spec:
   version: v1beta1
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
-description: CRD object for HTTP trigger type
+#description: CRD object for HTTP trigger type
 kind: CustomResourceDefinition
 metadata:
   name: cronjobtriggers.kubeless.io
@@ -185,19 +185,19 @@ data:
           {
             "name": "python27",
             "version": "2.7",
-            "runtimeImage": "410240865662.dkr.ecr.us-west-2.amazonaws.com/kubeless-python-27:100a6",
+            "runtimeImage": "kubeless/python:2.7",
             "initImage": "python:2.7"
           },
           {
             "name": "python34",
             "version": "3.4",
-            "runtimeImage": "kubeless/python@sha256:f19640c547a3f91dbbfb18c15b5e624029b4065c1baf2892144e07c36f0a7c8f",
+            "runtimeImage": "kubeless/python:3.4",
             "initImage": "python:3.4"
           },
           {
             "name": "python36",
             "version": "3.6",
-            "runtimeImage": "410240865662.dkr.ecr.us-west-2.amazonaws.com/kubeless-python-36:100a6",
+            "runtimeImage": "kubeless/python:3.6",
             "initImage": "python:3.6"
           }
         ],
@@ -211,13 +211,13 @@ data:
           {
             "name": "node6",
             "version": "6",
-            "runtimeImage": "410240865662.dkr.ecr.us-west-2.amazonaws.com/kubeless-node-6:100a6-3",
+            "runtimeImage": "kubeless/nodejs:6",
             "initImage": "node:6.10"
           },
           {
             "name": "node8",
             "version": "8",
-            "runtimeImage": "410240865662.dkr.ecr.us-west-2.amazonaws.com/kubeless-node-8:100a6",
+            "runtimeImage": "kubeless/nodejs:8",
             "initImage": "node:8"
           }
         ],
